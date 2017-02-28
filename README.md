@@ -10,18 +10,6 @@ The development and validation of updated type 2 diabetes risk equations is pote
 
 Sanjay Basu, M.D., Ph.D.1,2*, Rodney A. Hayward, M.D.3,4, Jeremy B. Sussman, M.D., M.S.3,4, Seth A. Berkowitz, M.D., M.P.H.5,6, John S. Yudkin, M.D.7
 
-1 Department of Medicine, Center for Population Health Sciences and Center for Primary Care Outcomes Research, Stanford University
-2 Center for Primary Care, Harvard Medical School
-3 Division of General Medicine, University of Michigan
-4 Center for Clinical Management Research, Veterans Affairs Ann Arbor Healthcare
-5 Division of General Internal Medicine and Diabetes Unit, Massachusetts General Hospital
-6 Department of Medicine, Harvard Medical School
-7 Division of Medicine, University College London
+*Email: basus@stanford.edu
 
-*to whom correspondence should be addressed:
-Stanford University 
-1070 Arastradero Road, Office 282
-Palo Alto, CA 94304
-Phone: +001 (650) 498-5678
-Fax: +001 (650) 498-8258
-Email: basus@stanford.edu
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
