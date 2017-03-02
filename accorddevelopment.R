@@ -423,7 +423,7 @@ d<-data.frame(neph1,t_neph1s,
               cvd_hx_baseline,
               hba1c,chol,hdl,screat,uacr)
 d=d[complete.cases(d),]
-adm.cens=1*365.25
+adm.cens=5*365.25
 d$fu.time <- pmin(d$t_neph1s, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_neph1s), 0, d$neph1)
 survcox_neph1<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+hisp+tob+intensivegly+intensivebp+fibratearm+
@@ -470,7 +470,7 @@ d<-data.frame(neph2,t_neph2s,
               cvd_hx_baseline,
               hba1c,chol,hdl,screat,uacr)
 d=d[complete.cases(d),]
-adm.cens=1*365.25
+adm.cens=5*365.25
 d$fu.time <- pmin(d$t_neph2s, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_neph2s), 0, d$neph2)
 survcox_neph2<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+hisp+tob+intensivegly+intensivebp+fibratearm+
@@ -516,7 +516,7 @@ d<-data.frame(neph3,t_neph3s,intensivegly,intensivebp,fibratearm,
               cvd_hx_baseline,
               hba1c,chol,hdl,screat,uacr)
 d=d[complete.cases(d),]
-adm.cens=3*365.25
+adm.cens=5*365.25
 d$fu.time <- pmin(d$t_neph3s, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_neph3s), 0, d$neph3)
 survcox_neph3<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+hisp+tob+intensivegly+intensivebp+fibratearm+
@@ -563,7 +563,7 @@ d<-data.frame(neph4,t_neph4s,intensivegly,intensivebp,fibratearm,
               cvd_hx_baseline,
               hba1c,chol,hdl,screat,uacr)
 d=d[complete.cases(d),]
-adm.cens=.5*365.25
+adm.cens=5*365.25
 d$fu.time <- pmin(d$t_neph4s, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_neph4s), 0, d$neph4)
 survcox_neph4<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+hisp+tob+intensivegly+intensivebp+fibratearm+
@@ -611,7 +611,7 @@ d<-data.frame(neph5,t_neph5s,intensivegly,intensivebp,fibratearm,
               cvd_hx_baseline,
               hba1c,chol,hdl,screat,uacr)
 d=d[complete.cases(d),]
-adm.cens=2*365.25
+adm.cens=5*365.25
 d$fu.time <- pmin(d$t_neph5s, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_neph5s), 0, d$neph5)
 survcox_neph5<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+hisp+tob+intensivegly+intensivebp+fibratearm+
@@ -659,7 +659,7 @@ d<-data.frame(neph235,t_neph235s,intensivegly,intensivebp,fibratearm,
               cvd_hx_baseline,
               hba1c,chol,hdl,screat,uacr)
 d=d[complete.cases(d),]
-adm.cens=2*365.25
+adm.cens=5*365.25
 d$fu.time <- pmin(d$t_neph235s, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_neph235s), 0, d$neph235)
 survcox_neph235<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+hisp+tob+intensivegly+intensivebp+fibratearm+
@@ -754,7 +754,7 @@ d<-data.frame(retin2,t_retin2s,
               cvd_hx_baseline,
               hba1c,chol,hdl,screat,uacr)
 d=d[complete.cases(d),]
-adm.cens=4*365.25
+adm.cens=5*365.25
 d$fu.time <- pmin(d$t_retin2s, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_retin2s), 0, d$retin2)
 survcox_retin2<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+
@@ -802,7 +802,7 @@ d<-data.frame(retin3,t_retin3s,
               cvd_hx_baseline,
               hba1c,chol,hdl,screat,uacr)
 d=d[complete.cases(d),]
-adm.cens=2*365.25
+adm.cens=5*365.25
 d$fu.time <- pmin(d$t_retin3s, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_retin3s), 0, d$retin3)
 survcox_retin3<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+
