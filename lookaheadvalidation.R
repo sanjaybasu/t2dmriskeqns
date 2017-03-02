@@ -73,12 +73,12 @@ intensivebp=(rep(FALSE,length(baseline_age)))
 fibratearm=(rep(FALSE,length(baseline_age)))
 
 
-sample = data.frame(AllMI,AllStroke,CHF,CVD_death,Death,baseline_age,female,black,hisp,tob,bmi,hr,
-                    sbp,dbp,
-                    bprx,oraldmrx,anti_coag,insulinrx,statin,fibrate,anti_coag,anti_inflam,platelet_agi,aspirin,
-                    cvd_hx_baseline,
-                    hba1c,chol,hdl,screat,ucreat,ualb,uacr,gfr,fpg)
-sample=sample[complete.cases(sample),]
+# sample = data.frame(AllMI,AllStroke,CHF,CVD_death,Death,baseline_age,female,black,hisp,tob,bmi,hr,
+#                     sbp,dbp,
+#                     bprx,oraldmrx,anti_coag,insulinrx,statin,fibrate,anti_coag,anti_inflam,platelet_agi,aspirin,
+#                     cvd_hx_baseline,
+#                     hba1c,chol,hdl,screat,ucreat,ualb,uacr,gfr,fpg)
+# sample=sample[complete.cases(sample),]
 
 
 # hard ASCVD
@@ -98,7 +98,7 @@ dp<-data.frame(ascvd,t_ascvds,
                cvd_hx_baseline,
                hba1c,chol,hdl,screat,uacr)
 dp=dp[complete.cases(dp),]
-adm.cens=10*365.25 #5, .962, 14 #10, .91, 10
+adm.cens=10*365.25 
 dp$fu.time <- pmin(dp$t_ascvds, adm.cens)
 dp$status <- ifelse(as.numeric(adm.cens < dp$t_ascvds), 0, dp$ascvd)
 betax=(survcox_ascvd$coefficients[1]*dp$baseline_age+
@@ -343,6 +343,7 @@ GND.result=GND.calib(pred=estinc_e, tvar=dp$fu.time, out=dp$status,
                      cens.t=adm.cens, groups=dp$dec, adm.cens=adm.cens)
 GND.result
 ci.cvAUC(estinc_e,dp$allmort)
+
 
 
 
