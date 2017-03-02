@@ -28,6 +28,8 @@ rm(list=ls())
 load("~/Data/accord/3-Data_Sets-Analysis/3a-Analysis_Data_Sets/accord_dm_models.RData")
 load("~/Data/Look_AHEAD_V4/Data/End_of_Intervention/Key_Data/lookahead_sbasu_cut.RData")
 detach(accord_sets)
+detach(dppos_sets)
+attach(lookahead_sets)
 baseline_age = lookahead_sets$age
 female = (lookahead_sets$FEMALE=='Yes')
 black = as.numeric(lookahead_sets$RACEVAR)==1
@@ -52,7 +54,7 @@ fibrate = (lookahead_sets$FIBRATES=="Yes")
 anti_coag = rep(0,length(baseline_age))
 anti_inflam = rep(0,length(baseline_age))
 platelet_agi = rep(0,length(baseline_age))
-aspirin = lookahead_sets$ASPIRIN
+aspirin = (lookahead_sets$ASPIRIN=='Every day')
 cpk = 'NA'
 mincr = screat/(0.7*female+0.9*(1-female))
 mincr[mincr>1] = 1
@@ -69,6 +71,15 @@ tob = as.numeric(lookahead_sets$SMOKING=="Present")
 intensivegly=(rep(FALSE,length(baseline_age)))
 intensivebp=(rep(FALSE,length(baseline_age)))
 fibratearm=(rep(FALSE,length(baseline_age)))
+
+
+sample = data.frame(AllMI,AllStroke,CHF,CVD_death,Death,baseline_age,female,black,hisp,tob,bmi,hr,
+                    sbp,dbp,
+                    bprx,oraldmrx,anti_coag,insulinrx,statin,fibrate,anti_coag,anti_inflam,platelet_agi,aspirin,
+                    cvd_hx_baseline,
+                    hba1c,chol,hdl,screat,ucreat,ualb,uacr,gfr,fpg)
+sample=sample[complete.cases(sample),]
+
 
 # hard ASCVD
 ascvd = (lookahead_sets$AllMI==1)|(lookahead_sets$AllStroke==1)#|(lookahead_sets$CVD_death==1)
@@ -87,7 +98,7 @@ dp<-data.frame(ascvd,t_ascvds,
                cvd_hx_baseline,
                hba1c,chol,hdl,screat,uacr)
 dp=dp[complete.cases(dp),]
-adm.cens=5*365.25
+adm.cens=10*365.25 #5, .962, 14 #10, .91, 10
 dp$fu.time <- pmin(dp$t_ascvds, adm.cens)
 dp$status <- ifelse(as.numeric(adm.cens < dp$t_ascvds), 0, dp$ascvd)
 betax=(survcox_ascvd$coefficients[1]*dp$baseline_age+
@@ -104,10 +115,10 @@ betax=(survcox_ascvd$coefficients[1]*dp$baseline_age+
          survcox_ascvd$coefficients[12]*dp$hdl+
          survcox_ascvd$coefficients[13]*dp$screat+
          survcox_ascvd$coefficients[14]*dp$uacr)
-risk = 1 - .962^exp(betax-mean(na.omit(betax)))
+risk = 1 - .91^exp(betax-mean(na.omit(betax)))
 estinc_e=risk
 #estinc_e=1-survfit_e$surv[dim(survfit_e$surv)[1],]
-dp$dec=as.numeric(cut2(estinc_e, g=9))
+dp$dec=as.numeric(cut2(estinc_e, g=10))
 GND.result=GND.calib(pred=estinc_e, tvar=dp$fu.time, out=dp$status, 
                      cens.t=adm.cens, groups=dp$dec, adm.cens=adm.cens)
 GND.result
@@ -131,7 +142,7 @@ dp<-data.frame(cvdmort,t_cvdmorts,
                cvd_hx_baseline,
                hba1c,chol,hdl,screat,uacr)
 dp=dp[complete.cases(dp),]
-adm.cens=5*365.25
+adm.cens=10*365.25
 dp$fu.time <- pmin(dp$t_cvdmorts, adm.cens)
 dp$status <- ifelse(as.numeric(adm.cens < dp$t_cvdmorts), 0, dp$cvdmort)
 betax=(survcox_cvdmort$coefficients[1]*dp$baseline_age+
@@ -148,10 +159,10 @@ betax=(survcox_cvdmort$coefficients[1]*dp$baseline_age+
          survcox_cvdmort$coefficients[12]*dp$hdl+
          survcox_cvdmort$coefficients[13]*dp$screat+
          survcox_cvdmort$coefficients[14]*dp$uacr)
-risk = 1 - .995^exp(betax-mean(na.omit(betax)))
+risk = 1 - .982^exp(betax-mean(na.omit(betax)))
 estinc_e=risk
 #estinc_e=1-survfit_e$surv[dim(survfit_e$surv)[1],]
-dp$dec=as.numeric(cut2(estinc_e, g=3))
+dp$dec=as.numeric(cut2(estinc_e, g=10))
 GND.result=GND.calib(pred=estinc_e, tvar=dp$fu.time, out=dp$status, 
                      cens.t=adm.cens, groups=dp$dec, adm.cens=adm.cens)
 GND.result
@@ -175,7 +186,7 @@ dp<-data.frame(mi,t_mis,
                cvd_hx_baseline,
                hba1c,chol,hdl,screat,uacr)
 dp=dp[complete.cases(dp),]
-adm.cens=5*365.25
+adm.cens=10*365.25
 dp$fu.time <- pmin(dp$t_mis, adm.cens)
 dp$status <- ifelse(as.numeric(adm.cens < dp$t_mis), 0, dp$mi)
 betax=(survcox_mi$coefficients[1]*dp$baseline_age+
@@ -192,7 +203,7 @@ betax=(survcox_mi$coefficients[1]*dp$baseline_age+
          survcox_mi$coefficients[12]*dp$hdl+
          survcox_mi$coefficients[13]*dp$screat+
          survcox_mi$coefficients[14]*dp$uacr)
-risk = 1 - .97^exp(betax-mean(na.omit(betax)))
+risk = 1 - .93^exp(betax-mean(na.omit(betax)))
 estinc_e=risk
 #estinc_e=1-survfit_e$surv[dim(survfit_e$surv)[1],]
 dp$dec=as.numeric(cut2(estinc_e, g=10))
@@ -219,7 +230,7 @@ dp<-data.frame(str,t_strs,
                cvd_hx_baseline,
                hba1c,chol,hdl,screat,uacr)
 dp=dp[complete.cases(dp),]
-adm.cens=5*365.25
+adm.cens=10*365.25
 dp$fu.time <- pmin(dp$t_strs, adm.cens)
 dp$status <- ifelse(as.numeric(adm.cens < dp$t_strs), 0, dp$str)
 betax=(survcox_str$coefficients[1]*dp$baseline_age+
@@ -236,10 +247,10 @@ betax=(survcox_str$coefficients[1]*dp$baseline_age+
          survcox_str$coefficients[12]*dp$hdl+
          survcox_str$coefficients[13]*dp$screat+
          survcox_str$coefficients[14]*dp$uacr)
-risk = 1 - .99^exp(betax-mean(na.omit(betax)))
+risk = 1 - .974^exp(betax-mean(na.omit(betax)))
 estinc_e=risk
 #estinc_e=1-survfit_e$surv[dim(survfit_e$surv)[1],]
-dp$dec=as.numeric(cut2(estinc_e, g=6))
+dp$dec=as.numeric(cut2(estinc_e, g=10))
 GND.result=GND.calib(pred=estinc_e, tvar=dp$fu.time, out=dp$status, 
                      cens.t=adm.cens, groups=dp$dec, adm.cens=adm.cens)
 GND.result
@@ -263,7 +274,7 @@ dp<-data.frame(chf,t_chfs,
                cvd_hx_baseline,
                hba1c,chol,hdl,screat,uacr)
 dp=dp[complete.cases(dp),]
-adm.cens=5*365.25
+adm.cens=10*365.25
 dp$fu.time <- pmin(dp$t_chfs, adm.cens)
 dp$status <- ifelse(as.numeric(adm.cens < dp$t_chfs), 0, dp$chf)
 betax=(survcox_chf$coefficients[1]*dp$baseline_age+
@@ -280,10 +291,10 @@ betax=(survcox_chf$coefficients[1]*dp$baseline_age+
          survcox_chf$coefficients[12]*dp$hdl+
          survcox_chf$coefficients[13]*dp$screat+
          survcox_chf$coefficients[14]*dp$uacr)
-risk = 1 - .985^exp(betax-mean(na.omit(betax)))
+risk = 1 - .963^exp(betax-mean(na.omit(betax)))
 estinc_e=risk
 #estinc_e=1-survfit_e$surv[dim(survfit_e$surv)[1],]
-dp$dec=as.numeric(cut2(estinc_e, g=6))
+dp$dec=as.numeric(cut2(estinc_e, g=8))
 GND.result=GND.calib(pred=estinc_e, tvar=dp$fu.time, out=dp$status, 
                      cens.t=adm.cens, groups=dp$dec, adm.cens=adm.cens)
 GND.result
@@ -307,7 +318,7 @@ dp<-data.frame(allmort,t_allmorts,
                cvd_hx_baseline,
                hba1c,chol,hdl,screat,uacr)
 dp=dp[complete.cases(dp),]
-adm.cens=5*365.25
+adm.cens=10*365.25
 dp$fu.time <- pmin(dp$t_allmorts, adm.cens)
 dp$status <- ifelse(as.numeric(adm.cens < dp$t_allmorts), 0, dp$allmort)
 betax=(survcox_allmort$coefficients[1]*dp$baseline_age+
@@ -324,7 +335,7 @@ betax=(survcox_allmort$coefficients[1]*dp$baseline_age+
          survcox_allmort$coefficients[12]*dp$hdl+
          survcox_allmort$coefficients[13]*dp$screat+
          survcox_allmort$coefficients[14]*dp$uacr)
-risk = 1 - .983^exp(betax-mean(na.omit(betax)))
+risk = 1 - .931^exp(betax-mean(na.omit(betax)))
 estinc_e=risk
 #estinc_e=1-survfit_e$surv[dim(survfit_e$surv)[1],]
 dp$dec=as.numeric(cut2(estinc_e, g=5))
