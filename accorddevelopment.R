@@ -297,7 +297,7 @@ survcox_str<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+tob+
 summary(survcox_str)
 survfit_d=survfit(survcox_str, newdata=d, se.fit=FALSE)
 estinc_d=1-survfit_d$surv[dim(survfit_d$surv)[1],]
-d$dec=as.numeric(cut2(estinc_d, g=8))
+d$dec=as.numeric(cut2(estinc_d, g=10))
 GND.result=GND.calib(pred=estinc_d, tvar=d$fu.time, out=d$status, 
                      cens.t=adm.cens, groups=d$dec, adm.cens=adm.cens)
 GND.result
@@ -481,7 +481,7 @@ survcox_neph2<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+his
 summary(survcox_neph2)
 survfit_d=survfit(survcox_neph2, newdata=d, se.fit=FALSE)
 estinc_d=1-survfit_d$surv[dim(survfit_d$surv)[1],]
-d$dec=as.numeric(cut2(estinc_d, g=2))
+d$dec=as.numeric(cut2(estinc_d, g=10))
 GND.result=GND.calib(pred=estinc_d, tvar=d$fu.time, out=d$status, 
                      cens.t=adm.cens, groups=d$dec, adm.cens=adm.cens)
 GND.result
@@ -1107,5 +1107,3 @@ GND.result
 ci.cvAUC(estinc_d,d$neuro4)
 
 save.image("~/Data/accord/3-Data_Sets-Analysis/3a-Analysis_Data_Sets/accord_dm_models.RData")
-
-
