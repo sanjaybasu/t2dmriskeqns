@@ -294,7 +294,7 @@ betax=(survcox_chf$coefficients[1]*dp$baseline_age+
 risk = 1 - .963^exp(betax-mean(na.omit(betax)))
 estinc_e=risk
 #estinc_e=1-survfit_e$surv[dim(survfit_e$surv)[1],]
-dp$dec=as.numeric(cut2(estinc_e, g=8))
+dp$dec=as.numeric(cut2(estinc_e, g=10))
 GND.result=GND.calib(pred=estinc_e, tvar=dp$fu.time, out=dp$status, 
                      cens.t=adm.cens, groups=dp$dec, adm.cens=adm.cens)
 GND.result
@@ -338,7 +338,7 @@ betax=(survcox_allmort$coefficients[1]*dp$baseline_age+
 risk = 1 - .931^exp(betax-mean(na.omit(betax)))
 estinc_e=risk
 #estinc_e=1-survfit_e$surv[dim(survfit_e$surv)[1],]
-dp$dec=as.numeric(cut2(estinc_e, g=5))
+dp$dec=as.numeric(cut2(estinc_e, g=10))
 GND.result=GND.calib(pred=estinc_e, tvar=dp$fu.time, out=dp$status, 
                      cens.t=adm.cens, groups=dp$dec, adm.cens=adm.cens)
 GND.result
