@@ -297,7 +297,7 @@ survcox_str<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+tob+
 summary(survcox_str)
 survfit_d=survfit(survcox_str, newdata=d, se.fit=FALSE)
 estinc_d=1-survfit_d$surv[dim(survfit_d$surv)[1],]
-d$dec=as.numeric(cut2(estinc_d, g=10))
+d$dec=as.numeric(cut2(estinc_d, g=8))
 GND.result=GND.calib(pred=estinc_d, tvar=d$fu.time, out=d$status, 
                      cens.t=adm.cens, groups=d$dec, adm.cens=adm.cens)
 GND.result
@@ -417,18 +417,18 @@ plot(neph1model.cv)
 coef.cv = coef(neph1model.cv, s = 'lambda.1se')
 coef.cv
 d<-data.frame(neph1,t_neph1s,
-              baseline_age,female,black,
+              baseline_age,female,black,hisp,tob,intensivegly,intensivebp,fibratearm,
               sbp,
-              bprx,oraldmrx,
+              bprx,oraldmrx,anti_coag,
               cvd_hx_baseline,
               hba1c,chol,hdl,screat,uacr)
 d=d[complete.cases(d),]
-adm.cens=5*365.25
+adm.cens=1*365.25
 d$fu.time <- pmin(d$t_neph1s, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_neph1s), 0, d$neph1)
-survcox_neph1<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+
+survcox_neph1<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+hisp+tob+intensivegly+intensivebp+fibratearm+
                    sbp+
-                   bprx+oraldmrx+
+                   bprx+oraldmrx+anti_coag+
                    cvd_hx_baseline+
                    hba1c+chol+hdl+screat+uacr)
 summary(survcox_neph1)
@@ -464,24 +464,24 @@ plot(neph2model.cv)
 coef.cv = coef(neph2model.cv, s = 'lambda.1se')
 coef.cv
 d<-data.frame(neph2,t_neph2s,
-              baseline_age,female,black,
+              baseline_age,female,black,hisp,tob,intensivegly,intensivebp,fibratearm,
               sbp,
-              bprx,oraldmrx,
+              bprx,oraldmrx,anti_coag,
               cvd_hx_baseline,
               hba1c,chol,hdl,screat,uacr)
 d=d[complete.cases(d),]
-adm.cens=5*365.25
+adm.cens=1*365.25
 d$fu.time <- pmin(d$t_neph2s, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_neph2s), 0, d$neph2)
-survcox_neph2<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+
+survcox_neph2<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+hisp+tob+intensivegly+intensivebp+fibratearm+
                    sbp+
-                   bprx+oraldmrx+
+                   bprx+oraldmrx+anti_coag+
                    cvd_hx_baseline+
                    hba1c+chol+hdl+screat+uacr)
 summary(survcox_neph2)
 survfit_d=survfit(survcox_neph2, newdata=d, se.fit=FALSE)
 estinc_d=1-survfit_d$surv[dim(survfit_d$surv)[1],]
-d$dec=as.numeric(cut2(estinc_d, g=10))
+d$dec=as.numeric(cut2(estinc_d, g=2))
 GND.result=GND.calib(pred=estinc_d, tvar=d$fu.time, out=d$status, 
                      cens.t=adm.cens, groups=d$dec, adm.cens=adm.cens)
 GND.result
@@ -509,19 +509,19 @@ neph3model.cv =  cv.glmnet(as.matrix(testsubset[,-c(1)]),as.matrix(testsubset[,1
 plot(neph3model.cv)
 coef.cv = coef(neph3model.cv, s = 'lambda.1se')
 coef.cv
-d<-data.frame(neph3,t_neph3s,
-              baseline_age,female,black,
+d<-data.frame(neph3,t_neph3s,intensivegly,intensivebp,fibratearm,
+              baseline_age,female,black,hisp,tob,
               sbp,
-              bprx,oraldmrx,
+              bprx,oraldmrx,anti_coag,
               cvd_hx_baseline,
               hba1c,chol,hdl,screat,uacr)
 d=d[complete.cases(d),]
-adm.cens=5*365.25
+adm.cens=3*365.25
 d$fu.time <- pmin(d$t_neph3s, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_neph3s), 0, d$neph3)
-survcox_neph3<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+
+survcox_neph3<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+hisp+tob+intensivegly+intensivebp+fibratearm+
                    sbp+
-                   bprx+oraldmrx+
+                   bprx+oraldmrx+anti_coag+
                    cvd_hx_baseline+
                    hba1c+chol+hdl+screat+uacr)
 summary(survcox_neph3)
@@ -554,21 +554,21 @@ testsubset = data.frame(cOutcome,intensivegly,intensivebp,fibratearm,
 testsubset=testsubset[complete.cases(testsubset),]
 neph4model.cv =  cv.glmnet(as.matrix(testsubset[,-c(1)]),as.matrix(testsubset[,1]),family="cox",parallel=TRUE)
 plot(neph4model.cv)
-coef.cv = coef(neph4model.cv, s = 'lambda.1se')
+coef.cv = coef(neph4model.cv, s = 'lambda.min')
 coef.cv
-d<-data.frame(neph4,t_neph4s,
-              baseline_age,female,black,
+d<-data.frame(neph4,t_neph4s,intensivegly,intensivebp,fibratearm,
+              baseline_age,female,black,hisp,tob,
               sbp,
-              bprx,oraldmrx,
+              bprx,oraldmrx,anti_coag,
               cvd_hx_baseline,
               hba1c,chol,hdl,screat,uacr)
 d=d[complete.cases(d),]
-adm.cens=5*365.25
+adm.cens=.5*365.25
 d$fu.time <- pmin(d$t_neph4s, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_neph4s), 0, d$neph4)
-survcox_neph4<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+
+survcox_neph4<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+hisp+tob+intensivegly+intensivebp+fibratearm+
                    sbp+
-                   bprx+oraldmrx+
+                   bprx+oraldmrx+anti_coag+
                    cvd_hx_baseline+
                    hba1c+chol+hdl+screat+uacr)
 summary(survcox_neph4)
@@ -602,21 +602,21 @@ testsubset = data.frame(cOutcome,intensivegly,intensivebp,fibratearm,
 testsubset=testsubset[complete.cases(testsubset),]
 neph5model.cv =  cv.glmnet(as.matrix(testsubset[,-c(1)]),as.matrix(testsubset[,1]),family="cox",parallel=TRUE)
 plot(neph5model.cv)
-coef.cv = coef(neph5model.cv, s = 'lambda.1se')
+coef.cv = coef(neph5model.cv, s = 'lambda.min')
 coef.cv
-d<-data.frame(neph5,t_neph5s,
-              baseline_age,female,black,
+d<-data.frame(neph5,t_neph5s,intensivegly,intensivebp,fibratearm,
+              baseline_age,female,black,hisp,tob,
               sbp,
-              bprx,oraldmrx,
+              bprx,oraldmrx,anti_coag,
               cvd_hx_baseline,
               hba1c,chol,hdl,screat,uacr)
 d=d[complete.cases(d),]
-adm.cens=5*365.25
+adm.cens=2*365.25
 d$fu.time <- pmin(d$t_neph5s, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_neph5s), 0, d$neph5)
-survcox_neph5<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+
+survcox_neph5<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+hisp+tob+intensivegly+intensivebp+fibratearm+
                    sbp+
-                   bprx+oraldmrx+
+                   bprx+oraldmrx+anti_coag+
                    cvd_hx_baseline+
                    hba1c+chol+hdl+screat+uacr)
 summary(survcox_neph5)
@@ -641,7 +641,7 @@ t_neph235s[t_neph235s==0] = 'NA'
 t_neph235s = as.numeric(t_neph235s)
 cOutcome = Surv(time=t_neph235s, event = neph235)
 
-testsubset = data.frame(cOutcome,
+testsubset = data.frame(cOutcome,intensivegly,intensivebp,fibratearm,
                         baseline_age,female,black,hisp,tob,bmi,
                         sbp,dbp,hr,
                         bprx,oraldmrx,statin,fibrate,anti_coag,anti_inflam,platelet_agi,aspirin,
@@ -652,19 +652,19 @@ neph235model.cv =  cv.glmnet(as.matrix(testsubset[,-c(1)]),as.matrix(testsubset[
 plot(neph235model.cv)
 coef.cv = coef(neph235model.cv, s = 'lambda.1se')
 coef.cv
-d<-data.frame(neph235,t_neph235s,
-              baseline_age,female,black,
+d<-data.frame(neph235,t_neph235s,intensivegly,intensivebp,fibratearm,
+              baseline_age,female,black,hisp,tob,
               sbp,
-              bprx,oraldmrx,
+              bprx,oraldmrx,anti_coag,
               cvd_hx_baseline,
               hba1c,chol,hdl,screat,uacr)
 d=d[complete.cases(d),]
-adm.cens=5*365.25
+adm.cens=2*365.25
 d$fu.time <- pmin(d$t_neph235s, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_neph235s), 0, d$neph235)
-survcox_neph235<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+
+survcox_neph235<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+hisp+tob+intensivegly+intensivebp+fibratearm+
                          sbp+
-                         bprx+oraldmrx+
+                         bprx+oraldmrx+anti_coag+
                          cvd_hx_baseline+
                          hba1c+chol+hdl+screat+uacr)
 summary(survcox_neph235)
@@ -754,7 +754,7 @@ d<-data.frame(retin2,t_retin2s,
               cvd_hx_baseline,
               hba1c,chol,hdl,screat,uacr)
 d=d[complete.cases(d),]
-adm.cens=5*365.25
+adm.cens=4*365.25
 d$fu.time <- pmin(d$t_retin2s, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_retin2s), 0, d$retin2)
 survcox_retin2<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+
@@ -793,21 +793,21 @@ testsubset = data.frame(cOutcome,intensivegly,intensivebp,fibratearm,
 testsubset=testsubset[complete.cases(testsubset),]
 retin3model.cv =  cv.glmnet(as.matrix(testsubset[,-c(1)]),as.matrix(testsubset[,1]),family="cox",parallel=TRUE)
 plot(retin3model.cv)
-coef.cv = coef(retin3model.cv, s = 'lambda.1se')
+coef.cv = coef(retin3model.cv, s = 'lambda.min')
 coef.cv
 d<-data.frame(retin3,t_retin3s,
               baseline_age,female,black,
               sbp,
-              bprx,oraldmrx,
+              bprx,oraldmrx,insulinrx,
               cvd_hx_baseline,
               hba1c,chol,hdl,screat,uacr)
 d=d[complete.cases(d),]
-adm.cens=5*365.25
+adm.cens=2*365.25
 d$fu.time <- pmin(d$t_retin3s, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_retin3s), 0, d$retin3)
 survcox_retin3<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+
                    sbp+
-                   bprx+oraldmrx+
+                   bprx+oraldmrx+insulinrx+
                    cvd_hx_baseline+
                    hba1c+chol+hdl+screat+uacr)
 summary(survcox_retin3)
@@ -868,6 +868,7 @@ GND.result=GND.calib(pred=estinc_d, tvar=d$fu.time, out=d$status,
 GND.result
 ci.cvAUC(estinc_d,d$retin4)
 
+
 ##### Retinopathy Outcome 1/4: for DPPOS validation  #####
 retin14 =  (accord_sets$Retin1==1)|(accord_sets$Retin4==1)
 t_censor = rowMaxs(cbind(accord_sets$Retin4Days,accord_sets$Retin1Days))
@@ -887,7 +888,7 @@ testsubset = data.frame(cOutcome,intensivegly,intensivebp,fibratearm,
 testsubset=testsubset[complete.cases(testsubset),]
 retin14model.cv =  cv.glmnet(as.matrix(testsubset[,-c(1)]),as.matrix(testsubset[,1]),family="cox",parallel=TRUE)
 plot(retin14model.cv)
-coef.cv = coef(retin14model.cv, s = 'lambda.1se')
+coef.cv = coef(retin14model.cv, s = 'lambda.min')
 coef.cv
 d<-data.frame(retin14,t_retin14s,
               baseline_age,female,black,
