@@ -1,4 +1,3 @@
-
 # ##### DPPOS data ####
 # rm(list=ls())
 # library(sas7bdat)
@@ -160,12 +159,11 @@ betax=(survcox_neph235$coefficients[1]*dp$baseline_age+
          survcox_neph235$coefficients[14]*dp$hba1c+
          survcox_neph235$coefficients[15]*dp$chol+
          survcox_neph235$coefficients[16]*dp$hdl+
-         survcox_neph235$coefficients[17]*dp$screat+
-         survcox_neph235$coefficients[18]*dp$uacr)
+         survcox_neph235$coefficients[17]*dp$screat)
 risk = 1 - .65^exp(betax-mean(na.omit(betax)))
 estinc_e=risk
 #estinc_e=1-survfit_e$surv[dim(survfit_e$surv)[1],]
-dp$dec=as.numeric(cut2(estinc_e, g=10))
+dp$dec=as.numeric(cut2(estinc_e, g=7))
 GND.result=GND.calib(pred=estinc_e, tvar=dp$fu.time, out=dp$status, 
                      cens.t=adm.cens, groups=dp$dec, adm.cens=adm.cens)
 GND.result
@@ -197,25 +195,27 @@ adm.cens=10*365.25
 dp$fu.time <- pmin(dp$t_eyes, adm.cens)
 dp$status <- ifelse(as.numeric(adm.cens < dp$t_eyes), 0, dp$eye)
 betax=(survcox_retin1$coefficients[1]*dp$baseline_age+
-         survcox_retin14$coefficients[2]*dp$female+
-         survcox_retin14$coefficients[3]*dp$black+
-         survcox_retin14$coefficients[4]*dp$sbp+
-         survcox_retin14$coefficients[5]*dp$bprx+
-         survcox_retin14$coefficients[6]*dp$oraldmrx+
-         survcox_retin14$coefficients[7]*dp$cvd_hx_baseline+
-         survcox_retin14$coefficients[8]*dp$hba1c+
-         survcox_retin14$coefficients[9]*dp$chol+
-         survcox_retin14$coefficients[10]*dp$hdl+
-         survcox_retin14$coefficients[11]*dp$screat+
-         survcox_retin14$coefficients[12]*dp$uacr)
-risk = 1 - .85^exp(betax-mean(na.omit(betax)))
-estinc_e=risk
-#estinc_e=1-survfit_e$surv[dim(survfit_e$surv)[1],]
-dp$dec=as.numeric(cut2(estinc_e, g=10))
-GND.result=GND.calib(pred=estinc_e, tvar=dp$fu.time, out=dp$status, 
-                     cens.t=adm.cens, groups=dp$dec, adm.cens=adm.cens)
-GND.result
-ci.cvAUC(estinc_e,dp$eye)
+         survcox_retin1$coefficients[2]*dp$female+
+         survcox_retin1$coefficients[3]*dp$black+
+         survcox_retin1$coefficients[4]*dp$sbp+
+         survcox_retin1$coefficients[5]*dp$bprx+
+         survcox_retin1$coefficients[6]*dp$oraldmrx+
+         survcox_retin1$coefficients[7]*dp$cvd_hx_baseline+
+         survcox_retin1$coefficients[8]*dp$hba1c+
+         survcox_retin1$coefficients[9]*dp$chol+
+         survcox_retin1$coefficients[10]*dp$hdl+
+         survcox_retin1$coefficients[11]*dp$screat)
+
+    risk = 1 - .86^exp(betax-mean(na.omit(betax)))
+    estinc_e=risk
+    #estinc_e=1-survfit_e$surv[dim(survfit_e$surv)[1],]
+    dp$dec=as.numeric(cut2(estinc_e, g=8))
+    GND.result=GND.calib(pred=estinc_e, tvar=dp$fu.time, out=dp$status, 
+                         cens.t=adm.cens, groups=dp$dec, adm.cens=adm.cens)
+    GND.result
+    ci.cvAUC(estinc_e,dp$eye)
+
+
 
 
 ##### Neuropathy #####
@@ -241,11 +241,11 @@ dp=dp[complete.cases(dp),]
 adm.cens=10*365.25
 dp$fu.time <- pmin(dp$t_neuro, adm.cens)
 dp$status <- ifelse(as.numeric(adm.cens < dp$t_neuro), 0, dp$neuro)
-betax=(survcox_neuro4$coefficients[1]*dp$baseline_age+survcox_neuro4$coefficients[2]*dp$female+survcox_neuro4$coefficients[3]*dp$black+survcox_neuro4$coefficients[4]*dp$sbp+survcox_neuro4$coefficients[5]*dp$bprx+survcox_neuro4$coefficients[6]*dp$oraldmrx+survcox_neuro4$coefficients[7]*dp$cvd_hx_baseline+survcox_neuro4$coefficients[8]*dp$hba1c+survcox_neuro4$coefficients[9]*dp$chol+survcox_neuro4$coefficients[10]*dp$hdl+survcox_neuro4$coefficients[11]*dp$screat+survcox_neuro4$coefficients[12]*dp$uacr)
-risk = 1 - .77^exp(betax-mean(na.omit(betax)))
+betax=(survcox_neuro4$coefficients[1]*dp$baseline_age+survcox_neuro4$coefficients[2]*dp$female+survcox_neuro4$coefficients[3]*dp$black+survcox_neuro4$coefficients[4]*dp$sbp+survcox_neuro4$coefficients[5]*dp$bprx+survcox_neuro4$coefficients[6]*dp$oraldmrx+survcox_neuro4$coefficients[7]*dp$cvd_hx_baseline+survcox_neuro4$coefficients[8]*dp$hba1c+survcox_neuro4$coefficients[9]*dp$chol+survcox_neuro4$coefficients[10]*dp$hdl+survcox_neuro4$coefficients[11]*dp$screat)
+risk = 1 - .8^exp(betax-mean(na.omit(betax)))
 estinc_e=risk
 #estinc_e=1-survfit_e$surv[dim(survfit_e$surv)[1],]
-dp$dec=as.numeric(cut2(estinc_e, g=10))
+dp$dec=as.numeric(cut2(estinc_e, g=5))
 GND.result=GND.calib(pred=estinc_e, tvar=dp$fu.time, out=dp$status, 
                      cens.t=adm.cens, groups=dp$dec, adm.cens=adm.cens)
 GND.result
