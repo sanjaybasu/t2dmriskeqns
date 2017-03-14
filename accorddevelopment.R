@@ -81,10 +81,10 @@ GND.calib = function(pred, tvar, out, cens.t, groups, adm.cens){
   numcat=length(unique(datause$dec))
   groups=sort(unique(datause$dec))
   kmtab=matrix(unlist(lapply(groups,kmdec,"dec",datain=datause, adm.cens)),ncol=5, byrow=TRUE)
-  # if (any(kmtab[,5] == -1)) stop("Stopped because at least one of the groups contains <2 events. Consider collapsing some groups.")
-  # else if (any(kmtab[,5] == 1)) warning("At least one of the groups contains < 5 events. GND can become unstable.\ 
-  #                                       (see Demler, Paynter, Cook 'Tests of Calibration and Goodness of Fit in the Survival Setting' DOI: 10.1002/sim.6428) \
-  #                                       Consider collapsing some groups to avoid this problem.")
+  if (any(kmtab[,5] == -1)) stop("Stopped because at least one of the groups contains <2 events. Consider collapsing some groups.")
+  else if (any(kmtab[,5] == 1)) warning("At least one of the groups contains < 5 events. GND can become unstable.\
+                                        (see Demler, Paynter, Cook 'Tests of Calibration and Goodness of Fit in the Survival Setting' DOI: 10.1002/sim.6428) \
+                                        Consider collapsing some groups to avoid this problem.")
   hltab=data.frame(group=kmtab[,4],
                    totaln=tapply(datause$count,datause$dec,sum),
                    censn=tapply(datause$cens.t,datause$dec,sum),
@@ -96,9 +96,9 @@ GND.calib = function(pred, tvar, out, cens.t, groups, adm.cens){
                    expectedperc=tapply(datause$pred,datause$dec,mean))
   hltab$kmnum=hltab$kmperc*hltab$totaln
   hltab$GND_component=ifelse(hltab$kmvar==0, 0,(hltab$kmperc-hltab$expectedperc)^2/(hltab$kmvar))
-  print(hltab[c(1,2,3,4,10,5,6,9,7,11)], digits=4)
-  plot(tapply(datause$pred,datause$dec,mean),1-kmtab[,1],xlab="Expected K-M rate",ylab="Observed K-M rate",xlim=c(0,1),ylim=c(0,1))
-  abline(a=0,b=1, col = "gray60")
+ print(hltab[c(1,2,3,4,10,5,6,9,7,11)], digits=4)
+ plot(tapply(datause$pred,datause$dec,mean),1-kmtab[,1],xlab="Expected K-M rate",ylab="Observed K-M rate",xlim=c(0,1),ylim=c(0,1))
+ abline(a=0,b=1, col = "gray60")
   calline = lm(hltab$kmperc~hltab$expectedperc)
   c(df=numcat-1, chi2gw=sum(hltab$GND_component),pvalgw=1-pchisq(sum(hltab$GND_component),numcat-1),slope=calline$coefficients[2],intercept = calline$coefficients[1])
 }
@@ -145,8 +145,8 @@ cvdmodel.cv =  cv.glmnet(as.matrix(testsubset[,-c(1)]),as.matrix(testsubset[,1])
 plot(cvdmodel.cv)
 coef.cv = coef(cvdmodel.cv, s = 'lambda.min')
 coef.cv
-c<-data.frame(cvd,t_cvds,
-              baseline_age,female,black,tob,
+c<-data.frame(cvd,t_cvds,intensivegly,intensivebp,fibratearm,
+              baseline_age,female,black,tob,hisp,bmi,
               sbp,
               bprx,statin,anti_coag,
               cvd_hx_baseline,
@@ -156,10 +156,10 @@ adm.cens=5*365.25
 c$fu.time <- pmin(c$t_cvds, adm.cens)
 c$status <- ifelse(as.numeric(adm.cens < c$t_cvds), 0, c$cvd)
 survcox_ascvd<-coxph(data=c, Surv(fu.time, status)~baseline_age+female+black+tob+
-                   sbp+
-                   bprx+statin+anti_coag+
-                   cvd_hx_baseline+
-                   hba1c+chol+hdl+screat+uacr)
+                    sbp+
+                    bprx+statin+anti_coag+
+                    cvd_hx_baseline+
+                    hba1c+chol+hdl+screat+uacr)
 summary(survcox_ascvd)
 survfit_c=survfit(survcox_ascvd, newdata=c, se.fit=FALSE)
 estinc_c=1-survfit_c$surv[dim(survfit_c$surv)[1],]
@@ -208,7 +208,7 @@ survcox_cvdmort<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+t
 summary(survcox_cvdmort)
 survfit_d=survfit(survcox_cvdmort, newdata=d, se.fit=FALSE)
 estinc_d=1-survfit_d$surv[dim(survfit_d$surv)[1],]
-d$dec=as.numeric(cut2(estinc_d, g=10))
+d$dec=as.numeric(cut2(estinc_d, g=9))
 GND.result=GND.calib(pred=estinc_d, tvar=d$fu.time, out=d$status, 
                      cens.t=adm.cens, groups=d$dec, adm.cens=adm.cens)
 GND.result
@@ -297,7 +297,7 @@ survcox_str<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+tob+
 summary(survcox_str)
 survfit_d=survfit(survcox_str, newdata=d, se.fit=FALSE)
 estinc_d=1-survfit_d$surv[dim(survfit_d$surv)[1],]
-d$dec=as.numeric(cut2(estinc_d, g=10))
+d$dec=as.numeric(cut2(estinc_d, g=8))
 GND.result=GND.calib(pred=estinc_d, tvar=d$fu.time, out=d$status, 
                      cens.t=adm.cens, groups=d$dec, adm.cens=adm.cens)
 GND.result
@@ -342,7 +342,7 @@ survcox_chf<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+tob+
 summary(survcox_chf)
 survfit_d=survfit(survcox_chf, newdata=d, se.fit=FALSE)
 estinc_d=1-survfit_d$surv[dim(survfit_d$surv)[1],]
-d$dec=as.numeric(cut2(estinc_d, g=10))
+d$dec=as.numeric(cut2(estinc_d, g=9))
 GND.result=GND.calib(pred=estinc_d, tvar=d$fu.time, out=d$status, 
                      cens.t=adm.cens, groups=d$dec, adm.cens=adm.cens)
 GND.result
@@ -487,6 +487,7 @@ GND.result=GND.calib(pred=estinc_d, tvar=d$fu.time, out=d$status,
 GND.result
 ci.cvAUC(estinc_d,d$neph2)
 
+
 ##### nephropathy 3: renal failure OR ESRD (dialysis) OR SCr>3.3 #####
 
 neph3 = as.numeric(accord_sets$Neph3==1)
@@ -618,7 +619,7 @@ survcox_neph5<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+his
                    sbp+
                    bprx+oraldmrx+anti_coag+
                    cvd_hx_baseline+
-                   hba1c+chol+hdl+screat+uacr)
+                   hba1c+chol+hdl+screat)
 summary(survcox_neph5)
 survfit_d=survfit(survcox_neph5, newdata=d, se.fit=FALSE)
 estinc_d=1-survfit_d$surv[dim(survfit_d$surv)[1],]
@@ -666,7 +667,7 @@ survcox_neph235<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+h
                          sbp+
                          bprx+oraldmrx+anti_coag+
                          cvd_hx_baseline+
-                         hba1c+chol+hdl+screat+uacr)
+                         hba1c+chol+hdl+screat)
 summary(survcox_neph235)
 survfit_d=survfit(survcox_neph235, newdata=d, se.fit=FALSE)
 estinc_d=1-survfit_d$surv[dim(survfit_d$surv)[1],]
@@ -714,7 +715,7 @@ survcox_retin1<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+
                         sbp+
                         bprx+oraldmrx+
                         cvd_hx_baseline+
-                        hba1c+chol+hdl+screat+uacr)
+                        hba1c+chol+hdl+screat)
 summary(survcox_retin1)
 survfit_d=survfit(survcox_retin1, newdata=d, se.fit=FALSE)
 estinc_d=1-survfit_d$surv[dim(survfit_d$surv)[1],]
@@ -904,7 +905,7 @@ survcox_retin14<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+
                          sbp+
                          bprx+oraldmrx+
                          cvd_hx_baseline+
-                         hba1c+chol+hdl+screat+uacr)
+                         hba1c+chol+hdl+screat)
 summary(survcox_retin14)
 survfit_d=survfit(survcox_retin14, newdata=d, se.fit=FALSE)
 estinc_d=1-survfit_d$surv[dim(survfit_d$surv)[1],]
@@ -1096,7 +1097,7 @@ survcox_neuro4<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+
                         sbp+
                         bprx+oraldmrx+
                         cvd_hx_baseline+
-                        hba1c+chol+hdl+screat+uacr)
+                        hba1c+chol+hdl+screat)
 summary(survcox_neuro4)
 survfit_d=survfit(survcox_neuro4, newdata=d, se.fit=FALSE)
 estinc_d=1-survfit_d$surv[dim(survfit_d$surv)[1],]
@@ -1107,3 +1108,5 @@ GND.result
 ci.cvAUC(estinc_d,d$neuro4)
 
 save.image("~/Data/accord/3-Data_Sets-Analysis/3a-Analysis_Data_Sets/accord_dm_models.RData")
+
+
