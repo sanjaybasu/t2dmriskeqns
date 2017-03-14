@@ -67,6 +67,7 @@ uacr = ualb/ucreat*1000
 alt = rep(0,length(baseline_age))
 potassium.y = rep(0,length(baseline_age))
 tob = as.numeric(lookahead_sets$SMOKING=="Present")
+bmi=as.numeric(lookahead_sets$bmi)
 
 intensivegly=(rep(FALSE,length(baseline_age)))
 intensivebp=(rep(FALSE,length(baseline_age)))
@@ -80,49 +81,6 @@ fibratearm=(rep(FALSE,length(baseline_age)))
 #                     hba1c,chol,hdl,screat,ucreat,ualb,uacr,gfr,fpg)
 # sample=sample[complete.cases(sample),]
 
-
-# hard ASCVD
-ascvd = (lookahead_sets$AllMI==1)|(lookahead_sets$AllStroke==1)#|(lookahead_sets$CVD_death==1)
-ascvd[is.na(ascvd)]=0
-t_censor = rowMaxs(cbind(lookahead_sets$t_AllMI,lookahead_sets$t_AllStroke,lookahead_sets$max))#,lookahead_sets$t_CVD_death
-t_ascvds = rowMaxs(cbind(lookahead_sets$t_AllMI*(lookahead_sets$AllMI),lookahead_sets$t_AllStroke*(lookahead_sets$AllStroke))) #,lookahead_sets$t_CVD_death*(lookahead_sets$CVD_death)
-t_ascvds[is.na(t_ascvds)]=0
-t_ascvds[t_ascvds==0] = t_censor[t_ascvds==0]
-t_ascvds[t_ascvds==0] = 'NA'
-t_ascvds = as.numeric(t_ascvds)
-
-dp<-data.frame(ascvd,t_ascvds,
-               baseline_age,female,black,tob,
-               sbp,
-               bprx,statin,anti_coag,
-               cvd_hx_baseline,
-               hba1c,chol,hdl,screat,uacr)
-dp=dp[complete.cases(dp),]
-adm.cens=10*365.25 
-dp$fu.time <- pmin(dp$t_ascvds, adm.cens)
-dp$status <- ifelse(as.numeric(adm.cens < dp$t_ascvds), 0, dp$ascvd)
-betax=(survcox_ascvd$coefficients[1]*dp$baseline_age+
-         survcox_ascvd$coefficients[2]*dp$female+
-         survcox_ascvd$coefficients[3]*dp$black+
-         survcox_ascvd$coefficients[4]*dp$tob+
-         survcox_ascvd$coefficients[5]*dp$sbp+
-         survcox_ascvd$coefficients[6]*dp$bprx+
-         survcox_ascvd$coefficients[7]*dp$statin+
-         survcox_ascvd$coefficients[8]*dp$anti_coag+
-         survcox_ascvd$coefficients[9]*dp$cvd_hx_baseline+
-         survcox_ascvd$coefficients[10]*dp$hba1c+
-         survcox_ascvd$coefficients[11]*dp$chol+
-         survcox_ascvd$coefficients[12]*dp$hdl+
-         survcox_ascvd$coefficients[13]*dp$screat+
-         survcox_ascvd$coefficients[14]*dp$uacr)
-risk = 1 - .91^exp(betax-mean(na.omit(betax)))
-estinc_e=risk
-#estinc_e=1-survfit_e$surv[dim(survfit_e$surv)[1],]
-dp$dec=as.numeric(cut2(estinc_e, g=10))
-GND.result=GND.calib(pred=estinc_e, tvar=dp$fu.time, out=dp$status, 
-                     cens.t=adm.cens, groups=dp$dec, adm.cens=adm.cens)
-GND.result
-ci.cvAUC(estinc_e,dp$ascvd)
 
 
 # CVD mort
@@ -159,14 +117,16 @@ betax=(survcox_cvdmort$coefficients[1]*dp$baseline_age+
          survcox_cvdmort$coefficients[12]*dp$hdl+
          survcox_cvdmort$coefficients[13]*dp$screat+
          survcox_cvdmort$coefficients[14]*dp$uacr)
-risk = 1 - .982^exp(betax-mean(na.omit(betax)))
-estinc_e=risk
-#estinc_e=1-survfit_e$surv[dim(survfit_e$surv)[1],]
-dp$dec=as.numeric(cut2(estinc_e, g=10))
-GND.result=GND.calib(pred=estinc_e, tvar=dp$fu.time, out=dp$status, 
-                     cens.t=adm.cens, groups=dp$dec, adm.cens=adm.cens)
-GND.result
-ci.cvAUC(estinc_e,dp$cvdmort)
+
+    risk = 1 - .974^exp(betax-mean(na.omit(betax)))
+    estinc_e=risk
+    #estinc_e=1-survfit_e$surv[dim(survfit_e$surv)[1],]
+    dp$dec=as.numeric(cut2(estinc_e, g=4))
+    GND.result=GND.calib(pred=estinc_e, tvar=dp$fu.time, out=dp$status, 
+                         cens.t=adm.cens, groups=dp$dec, adm.cens=adm.cens)
+    GND.result
+    ci.cvAUC(estinc_e,dp$cvdmort)
+
 
 
 # MI fatal/nonfat
@@ -247,14 +207,64 @@ betax=(survcox_str$coefficients[1]*dp$baseline_age+
          survcox_str$coefficients[12]*dp$hdl+
          survcox_str$coefficients[13]*dp$screat+
          survcox_str$coefficients[14]*dp$uacr)
-risk = 1 - .974^exp(betax-mean(na.omit(betax)))
+risk = 1 - .976^exp(betax-mean(na.omit(betax)))
 estinc_e=risk
 #estinc_e=1-survfit_e$surv[dim(survfit_e$surv)[1],]
-dp$dec=as.numeric(cut2(estinc_e, g=10))
+dp$dec=as.numeric(cut2(estinc_e, g=7))
 GND.result=GND.calib(pred=estinc_e, tvar=dp$fu.time, out=dp$status, 
                      cens.t=adm.cens, groups=dp$dec, adm.cens=adm.cens)
 GND.result
 ci.cvAUC(estinc_e,dp$str)
+
+
+# hard ASCVD
+
+ascvd = (lookahead_sets$AllStroke==1)|(lookahead_sets$AllMI==1)|(lookahead_sets$CVD_death==1)
+ascvd[is.na(ascvd)]=0
+t_censor= rowMaxs(cbind(lookahead_sets$t_AllMI,lookahead_sets$t_AllStroke,lookahead_sets$t_CVD_death,lookahead_sets$max))
+t_ascvds = rowMaxs(cbind(lookahead_sets$t_AllStroke*(lookahead_sets$AllStroke),lookahead_sets$t_AllMI*(lookahead_sets$AllMI),lookahead_sets$t_CVD_death*(lookahead_sets$CVD_death)))
+t_ascvds[is.na(t_ascvds)]=0
+t_ascvds[t_ascvds==0] = t_censor[t_ascvds==0]
+t_ascvds[t_ascvds==0] = 'NA'
+t_ascvds = as.numeric(t_ascvds)
+
+dp<-data.frame(ascvd,t_ascvds,intensivegly,intensivebp,fibratearm,
+               baseline_age,female,black,tob,hisp,bmi,
+               sbp,
+               bprx,statin,anti_coag,
+               cvd_hx_baseline,
+               hba1c,chol,hdl,screat,uacr)
+dp=dp[complete.cases(dp),]
+adm.cens=10*365.25 
+dp$fu.time <- pmin(dp$t_ascvds, adm.cens)
+dp$status <- ifelse(as.numeric(adm.cens < dp$t_ascvds), 0, dp$ascvd)
+betax=(survcox_ascvd$coefficients[1]*dp$baseline_age+
+         survcox_ascvd$coefficients[2]*dp$female+
+         survcox_ascvd$coefficients[3]*dp$black+
+         survcox_ascvd$coefficients[4]*dp$tob+
+         survcox_ascvd$coefficients[5]*dp$sbp+
+         survcox_ascvd$coefficients[6]*dp$bprx+
+         survcox_ascvd$coefficients[7]*dp$statin+
+         survcox_ascvd$coefficients[8]*dp$anti_coag+
+         survcox_ascvd$coefficients[9]*dp$cvd_hx_baseline+
+         survcox_ascvd$coefficients[10]*dp$hba1c+
+         survcox_ascvd$coefficients[11]*dp$chol+
+         survcox_ascvd$coefficients[12]*dp$hdl+
+         survcox_ascvd$coefficients[13]*dp$screat+
+         survcox_ascvd$coefficients[14]*dp$uacr)
+
+    risk = 1 - .852^exp(betax-mean(na.omit(betax)))
+    estinc_e=risk
+    #estinc_e=1-survfit_e$surv[dim(survfit_e$surv)[1],]
+    dp$dec=as.numeric(cut2(estinc_e, g=10))
+    GND.result=GND.calib(pred=estinc_e, tvar=dp$fu.time, out=dp$status,
+                         cens.t=adm.cens, groups=dp$dec, adm.cens=adm.cens)
+    GND.result
+    ci.cvAUC(estinc_e,dp$ascvd)
+
+
+
+
 
  
 # CHF
@@ -291,10 +301,10 @@ betax=(survcox_chf$coefficients[1]*dp$baseline_age+
          survcox_chf$coefficients[12]*dp$hdl+
          survcox_chf$coefficients[13]*dp$screat+
          survcox_chf$coefficients[14]*dp$uacr)
-risk = 1 - .963^exp(betax-mean(na.omit(betax)))
+risk = 1 - .962^exp(betax-mean(na.omit(betax)))
 estinc_e=risk
 #estinc_e=1-survfit_e$surv[dim(survfit_e$surv)[1],]
-dp$dec=as.numeric(cut2(estinc_e, g=10))
+dp$dec=as.numeric(cut2(estinc_e, g=7))
 GND.result=GND.calib(pred=estinc_e, tvar=dp$fu.time, out=dp$status, 
                      cens.t=adm.cens, groups=dp$dec, adm.cens=adm.cens)
 GND.result
@@ -335,7 +345,7 @@ betax=(survcox_allmort$coefficients[1]*dp$baseline_age+
          survcox_allmort$coefficients[12]*dp$hdl+
          survcox_allmort$coefficients[13]*dp$screat+
          survcox_allmort$coefficients[14]*dp$uacr)
-risk = 1 - .931^exp(betax-mean(na.omit(betax)))
+risk = 1 - .933^exp(betax-mean(na.omit(betax)))
 estinc_e=risk
 #estinc_e=1-survfit_e$surv[dim(survfit_e$surv)[1],]
 dp$dec=as.numeric(cut2(estinc_e, g=10))
@@ -343,7 +353,6 @@ GND.result=GND.calib(pred=estinc_e, tvar=dp$fu.time, out=dp$status,
                      cens.t=adm.cens, groups=dp$dec, adm.cens=adm.cens)
 GND.result
 ci.cvAUC(estinc_e,dp$allmort)
-
 
 
 
