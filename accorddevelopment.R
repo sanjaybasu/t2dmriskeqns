@@ -259,6 +259,7 @@ GND.result=GND.calib(pred=estinc_d, tvar=d$fu.time, out=d$status,
 GND.result
 ci.cvAUC(estinc_d,d$mi)
 
+
 ##### stroke: fatal or nonfatal #####
 str = (accord_sets$censor_tst==0)
 t_censor = rowMaxs(cbind(accord_sets$fuyrs_tst*365.25))
@@ -870,7 +871,7 @@ GND.result
 ci.cvAUC(estinc_d,d$retin4)
 
 
-##### Retinopathy Outcome 1/4: for DPPOS validation  #####
+##### Retinopathy Outcome 1/4  #####
 retin14 =  (accord_sets$Retin1==1)|(accord_sets$Retin4==1)
 t_censor = rowMaxs(cbind(accord_sets$Retin4Days,accord_sets$Retin1Days))
 t_retin14s = rowMaxs(cbind(accord_sets$Retin4Days*as.numeric(accord_sets$Retin4),accord_sets$Retin1Days*as.numeric(accord_sets$Retin1)))
