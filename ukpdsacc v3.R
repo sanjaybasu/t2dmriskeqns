@@ -357,5 +357,5 @@ GND.result=GND.calib(pred=estinc_e, tvar=dp$fu.time, out=dp$status,
 GND.result
 ci.cvAUC(estinc_e,dp$allmort)
 
-
+ 
 
