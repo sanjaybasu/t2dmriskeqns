@@ -96,9 +96,9 @@ GND.calib = function(pred, tvar, out, cens.t, groups, adm.cens){
                    expectedperc=tapply(datause$pred,datause$dec,mean))
   hltab$kmnum=hltab$kmperc*hltab$totaln
   hltab$GND_component=ifelse(hltab$kmvar==0, 0,(hltab$kmperc-hltab$expectedperc)^2/(hltab$kmvar))
- print(hltab[c(1,2,3,4,10,5,6,9,7,11)], digits=4)
- plot(tapply(datause$pred,datause$dec,mean),1-kmtab[,1],xlab="Expected K-M rate",ylab="Observed K-M rate",xlim=c(0,1),ylim=c(0,1))
- abline(a=0,b=1, col = "gray60")
+  print(hltab[c(1,2,3,4,10,5,6,9,7,11)], digits=4)
+  plot(tapply(datause$pred,datause$dec,mean),1-kmtab[,1],xlab="Expected K-M rate",ylab="Observed K-M rate",xlim=c(0,1),ylim=c(0,1))
+  abline(a=0,b=1, col = "gray60")
   calline = lm(hltab$kmperc~hltab$expectedperc)
   c(df=numcat-1, chi2gw=sum(hltab$GND_component),pvalgw=1-pchisq(sum(hltab$GND_component),numcat-1),slope=calline$coefficients[2],intercept = calline$coefficients[1])
 }
@@ -156,10 +156,10 @@ adm.cens=5*365.25
 c$fu.time <- pmin(c$t_cvds, adm.cens)
 c$status <- ifelse(as.numeric(adm.cens < c$t_cvds), 0, c$cvd)
 survcox_ascvd<-coxph(data=c, Surv(fu.time, status)~baseline_age+female+black+tob+
-                    sbp+
-                    bprx+statin+anti_coag+
-                    cvd_hx_baseline+
-                    hba1c+chol+hdl+screat+uacr)
+                       sbp+
+                       bprx+statin+anti_coag+
+                       cvd_hx_baseline+
+                       hba1c+chol+hdl+screat+uacr)
 summary(survcox_ascvd)
 survfit_c=survfit(survcox_ascvd, newdata=c, se.fit=FALSE)
 estinc_c=1-survfit_c$surv[dim(survfit_c$surv)[1],]
@@ -201,10 +201,10 @@ adm.cens=5*365.25
 d$fu.time <- pmin(d$t_cvmorts, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_cvmorts), 0, d$cvmort)
 survcox_cvdmort<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+tob+
-                   sbp+
-                   bprx+statin+anti_coag+
-                   cvd_hx_baseline+
-                   hba1c+chol+hdl+screat+uacr)
+                         sbp+
+                         bprx+statin+anti_coag+
+                         cvd_hx_baseline+
+                         hba1c+chol+hdl+screat+uacr)
 summary(survcox_cvdmort)
 survfit_d=survfit(survcox_cvdmort, newdata=d, se.fit=FALSE)
 estinc_d=1-survfit_d$surv[dim(survfit_d$surv)[1],]
@@ -246,10 +246,10 @@ adm.cens=5*365.25
 d$fu.time <- pmin(d$t_mis, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_mis), 0, d$mi)
 survcox_mi<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+tob+
-                   sbp+
-                   bprx+statin+anti_coag+
-                   cvd_hx_baseline+
-                   hba1c+chol+hdl+screat+uacr)
+                    sbp+
+                    bprx+statin+anti_coag+
+                    cvd_hx_baseline+
+                    hba1c+chol+hdl+screat+uacr)
 summary(survcox_mi)
 survfit_d=survfit(survcox_mi, newdata=d, se.fit=FALSE)
 estinc_d=1-survfit_d$surv[dim(survfit_d$surv)[1],]
@@ -291,10 +291,10 @@ adm.cens=5*365.25
 d$fu.time <- pmin(d$t_strs, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_strs), 0, d$str)
 survcox_str<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+tob+
-                   sbp+
-                   bprx+statin+anti_coag+
-                   cvd_hx_baseline+
-                   hba1c+chol+hdl+screat+uacr)
+                     sbp+
+                     bprx+statin+anti_coag+
+                     cvd_hx_baseline+
+                     hba1c+chol+hdl+screat+uacr)
 summary(survcox_str)
 survfit_d=survfit(survcox_str, newdata=d, se.fit=FALSE)
 estinc_d=1-survfit_d$surv[dim(survfit_d$surv)[1],]
@@ -336,10 +336,10 @@ adm.cens=5*365.25
 d$fu.time <- pmin(d$t_chfs, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_chfs), 0, d$chf)
 survcox_chf<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+tob+
-                   sbp+
-                   bprx+statin+anti_coag+
-                   cvd_hx_baseline+
-                   hba1c+chol+hdl+screat+uacr)
+                     sbp+
+                     bprx+statin+anti_coag+
+                     cvd_hx_baseline+
+                     hba1c+chol+hdl+screat+uacr)
 summary(survcox_chf)
 survfit_d=survfit(survcox_chf, newdata=d, se.fit=FALSE)
 estinc_d=1-survfit_d$surv[dim(survfit_d$surv)[1],]
@@ -381,10 +381,10 @@ adm.cens=5*365.25
 d$fu.time <- pmin(d$t_allmorts, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_allmorts), 0, d$allmort)
 survcox_allmort<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+tob+
-                   sbp+
-                   bprx+statin+anti_coag+
-                   cvd_hx_baseline+
-                   hba1c+chol+hdl+screat+uacr)
+                         sbp+
+                         bprx+statin+anti_coag+
+                         cvd_hx_baseline+
+                         hba1c+chol+hdl+screat+uacr)
 summary(survcox_allmort)
 survfit_d=survfit(survcox_allmort, newdata=d, se.fit=FALSE)
 estinc_d=1-survfit_d$surv[dim(survfit_d$surv)[1],]
@@ -428,10 +428,10 @@ adm.cens=5*365.25
 d$fu.time <- pmin(d$t_neph1s, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_neph1s), 0, d$neph1)
 survcox_neph1<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+hisp+tob+intensivegly+intensivebp+fibratearm+
-                   sbp+
-                   bprx+oraldmrx+anti_coag+
-                   cvd_hx_baseline+
-                   hba1c+chol+hdl+screat+uacr)
+                       sbp+
+                       bprx+oraldmrx+anti_coag+
+                       cvd_hx_baseline+
+                       hba1c+chol+hdl+screat+uacr)
 summary(survcox_neph1)
 survfit_d=survfit(survcox_neph1, newdata=d, se.fit=FALSE)
 estinc_d=1-survfit_d$surv[dim(survfit_d$surv)[1],]
@@ -475,10 +475,10 @@ adm.cens=5*365.25
 d$fu.time <- pmin(d$t_neph2s, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_neph2s), 0, d$neph2)
 survcox_neph2<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+hisp+tob+intensivegly+intensivebp+fibratearm+
-                   sbp+
-                   bprx+oraldmrx+anti_coag+
-                   cvd_hx_baseline+
-                   hba1c+chol+hdl+screat+uacr)
+                       sbp+
+                       bprx+oraldmrx+anti_coag+
+                       cvd_hx_baseline+
+                       hba1c+chol+hdl+screat)
 summary(survcox_neph2)
 survfit_d=survfit(survcox_neph2, newdata=d, se.fit=FALSE)
 estinc_d=1-survfit_d$surv[dim(survfit_d$surv)[1],]
@@ -522,10 +522,10 @@ adm.cens=5*365.25
 d$fu.time <- pmin(d$t_neph3s, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_neph3s), 0, d$neph3)
 survcox_neph3<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+hisp+tob+intensivegly+intensivebp+fibratearm+
-                   sbp+
-                   bprx+oraldmrx+anti_coag+
-                   cvd_hx_baseline+
-                   hba1c+chol+hdl+screat+uacr)
+                       sbp+
+                       bprx+oraldmrx+anti_coag+
+                       cvd_hx_baseline+
+                       hba1c+chol+hdl+screat+uacr)
 summary(survcox_neph3)
 survfit_d=survfit(survcox_neph3, newdata=d, se.fit=FALSE)
 estinc_d=1-survfit_d$surv[dim(survfit_d$surv)[1],]
@@ -569,10 +569,10 @@ adm.cens=5*365.25
 d$fu.time <- pmin(d$t_neph4s, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_neph4s), 0, d$neph4)
 survcox_neph4<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+hisp+tob+intensivegly+intensivebp+fibratearm+
-                   sbp+
-                   bprx+oraldmrx+anti_coag+
-                   cvd_hx_baseline+
-                   hba1c+chol+hdl+screat+uacr)
+                       sbp+
+                       bprx+oraldmrx+anti_coag+
+                       cvd_hx_baseline+
+                       hba1c+chol+hdl+screat)
 summary(survcox_neph4)
 survfit_d=survfit(survcox_neph4, newdata=d, se.fit=FALSE)
 estinc_d=1-survfit_d$surv[dim(survfit_d$surv)[1],]
@@ -617,10 +617,10 @@ adm.cens=5*365.25
 d$fu.time <- pmin(d$t_neph5s, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_neph5s), 0, d$neph5)
 survcox_neph5<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+hisp+tob+intensivegly+intensivebp+fibratearm+
-                   sbp+
-                   bprx+oraldmrx+anti_coag+
-                   cvd_hx_baseline+
-                   hba1c+chol+hdl+screat)
+                       sbp+
+                       bprx+oraldmrx+anti_coag+
+                       cvd_hx_baseline+
+                       hba1c+chol+hdl+screat)
 summary(survcox_neph5)
 survfit_d=survfit(survcox_neph5, newdata=d, se.fit=FALSE)
 estinc_d=1-survfit_d$surv[dim(survfit_d$surv)[1],]
@@ -760,10 +760,10 @@ adm.cens=5*365.25
 d$fu.time <- pmin(d$t_retin2s, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_retin2s), 0, d$retin2)
 survcox_retin2<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+
-                   sbp+
-                   bprx+oraldmrx+
-                   cvd_hx_baseline+
-                   hba1c+chol+hdl+screat+uacr)
+                        sbp+
+                        bprx+oraldmrx+
+                        cvd_hx_baseline+
+                        hba1c+chol+hdl+screat+uacr)
 summary(survcox_retin2)
 survfit_d=survfit(survcox_retin2, newdata=d, se.fit=FALSE)
 estinc_d=1-survfit_d$surv[dim(survfit_d$surv)[1],]
@@ -808,10 +808,10 @@ adm.cens=5*365.25
 d$fu.time <- pmin(d$t_retin3s, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_retin3s), 0, d$retin3)
 survcox_retin3<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+
-                   sbp+
-                   bprx+oraldmrx+insulinrx+
-                   cvd_hx_baseline+
-                   hba1c+chol+hdl+screat+uacr)
+                        sbp+
+                        bprx+oraldmrx+insulinrx+
+                        cvd_hx_baseline+
+                        hba1c+chol+hdl+screat+uacr)
 summary(survcox_retin3)
 survfit_d=survfit(survcox_retin3, newdata=d, se.fit=FALSE)
 estinc_d=1-survfit_d$surv[dim(survfit_d$surv)[1],]
@@ -951,10 +951,10 @@ adm.cens=5*365.25
 d$fu.time <- pmin(d$t_neuro1s, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_neuro1s), 0, d$neuro1)
 survcox_neuro1<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+
-                   sbp+
-                   bprx+oraldmrx+
-                   cvd_hx_baseline+
-                   hba1c+chol+hdl+screat+uacr)
+                        sbp+
+                        bprx+oraldmrx+
+                        cvd_hx_baseline+
+                        hba1c+chol+hdl+screat+uacr)
 summary(survcox_neuro1)
 survfit_d=survfit(survcox_neuro1, newdata=d, se.fit=FALSE)
 estinc_d=1-survfit_d$surv[dim(survfit_d$surv)[1],]
@@ -999,10 +999,10 @@ adm.cens=5*365.25
 d$fu.time <- pmin(d$t_neuro2s, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_neuro2s), 0, d$neuro2)
 survcox_neuro2<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+
-                   sbp+
-                   bprx+oraldmrx+
-                   cvd_hx_baseline+
-                   hba1c+chol+hdl+screat+uacr)
+                        sbp+
+                        bprx+oraldmrx+
+                        cvd_hx_baseline+
+                        hba1c+chol+hdl+screat+uacr)
 summary(survcox_neuro2)
 survfit_d=survfit(survcox_neuro2, newdata=d, se.fit=FALSE)
 estinc_d=1-survfit_d$surv[dim(survfit_d$surv)[1],]
@@ -1047,10 +1047,10 @@ adm.cens=5*365.25
 d$fu.time <- pmin(d$t_neuro3s, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_neuro3s), 0, d$neuro3)
 survcox_neuro3<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+
-                   sbp+
-                   bprx+oraldmrx+
-                   cvd_hx_baseline+
-                   hba1c+chol+hdl+screat+uacr)
+                        sbp+
+                        bprx+oraldmrx+
+                        cvd_hx_baseline+
+                        hba1c+chol+hdl+screat+uacr)
 summary(survcox_neuro3)
 survfit_d=survfit(survcox_neuro3, newdata=d, se.fit=FALSE)
 estinc_d=1-survfit_d$surv[dim(survfit_d$surv)[1],]
@@ -1109,5 +1109,3 @@ GND.result
 ci.cvAUC(estinc_d,d$neuro4)
 
 save.image("~/Data/accord/3-Data_Sets-Analysis/3a-Analysis_Data_Sets/accord_dm_models.RData")
-
-
