@@ -266,20 +266,20 @@ server = function(input, output) {
   
   
   mi_beta = reactive({round(100*(1-0.85^exp(0 + 
-                                              0.03412 * as.numeric(input$age) + 
-                                              -0.1645* as.numeric(input$sex) + 
-                                              -0.1199 * as.numeric(input$black) + 
-                                              0.1656*as.numeric(input$cursmoke)+
-                                              0.00008988 * as.numeric(input$sysbp) + 
-                                              0.04768 * as.numeric(input$bprx) + 
-                                              0.7781 * as.numeric(input$cvdhist) + 
-                                              -0.02872 * as.numeric(input$statin) + 
-                                              0.2522*as.numeric(input$anticoag)+
-                                              0.4256 * as.numeric(input$sercreat) + 
-                                              0.001903 * as.numeric(input$totchol) + 
-                                              -0.008402 * as.numeric(input$hdlchol) +
-                                              0.1706 * as.numeric(input$hgba1c) +
-                                              0.0003359 *as.numeric(input$uralbcreat)+
+                                              0.034210 * as.numeric(input$age) + 
+                                              -0.167200* as.numeric(input$sex) + 
+                                              -0.118700 * as.numeric(input$black) + 
+                                              0.151000*as.numeric(input$cursmoke)+
+                                              0.000074 * as.numeric(input$sysbp) + 
+                                              0.055790 * as.numeric(input$bprx) + 
+                                              0.778400 * as.numeric(input$cvdhist) + 
+                                              -0.033610 * as.numeric(input$statin) + 
+                                              0.252400*as.numeric(input$anticoag)+
+                                              0.435500 * as.numeric(input$sercreat) + 
+                                              0.001929 * as.numeric(input$totchol) + 
+                                              -0.008370 * as.numeric(input$hdlchol) +
+                                              0.171600 * as.numeric(input$hgba1c) +
+                                              0.000333 *as.numeric(input$uralbcreat)+
                                               -3.65)))
   })
   
