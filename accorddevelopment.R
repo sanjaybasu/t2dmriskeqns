@@ -809,7 +809,7 @@ d$fu.time <- pmin(d$t_retin3s, adm.cens)
 d$status <- ifelse(as.numeric(adm.cens < d$t_retin3s), 0, d$retin3)
 survcox_retin3<-coxph(data=d, Surv(fu.time, status)~baseline_age+female+black+
                         sbp+
-                        bprx+oraldmrx+insulinrx+
+                        bprx+oraldmrx+
                         cvd_hx_baseline+
                         hba1c+chol+hdl+screat+uacr)
 summary(survcox_retin3)
