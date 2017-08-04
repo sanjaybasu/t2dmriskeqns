@@ -245,7 +245,7 @@ server = function(input, output) {
   output$retin = renderText({ retin_beta() })
   
   
-  neuro_beta = reactive({round(100*(1-0.8^exp(0 + 
+  neuro_beta = reactive({round(100*(1-0.87^exp(0 + 
                                           3.022e-02 * as.numeric(input$age) + 
                                           -1.868e-01 * as.numeric(input$sex) + 
                                           -9.448e-02 * as.numeric(input$black) + 
@@ -257,7 +257,7 @@ server = function(input, output) {
                                           2.185e-03 * as.numeric(input$totchol)*183.2/4.7 + 
                                           -5.389e-03 * as.numeric(input$hdlchol)*41.8/1.1 +
                                           1.887e-01 * as.numeric(input$hgba1c) +
-                                           -3.84)))
+                                           -4.746261)))
   })
   
   
