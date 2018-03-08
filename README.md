@@ -9,9 +9,12 @@ The development and validation of updated type 2 diabetes risk equations is pote
 Code to implement an automated GUI calculator (using the Shiny app for R) is available in either US/conventional units [ https://github.com/sanjaybasu/t2dmriskeqns/blob/master/app.R ] or SI units [ https://github.com/sanjaybasu/t2dmriskeqns/blob/master/appSI.R ], and implemented online [ https://sanjaybasu.shinyapps.io/recode/ ].
 
 For additional reading, please see:
-1 Basu S, Sussman JB, Berkowitz SA, Hayward RA, Yudkin JS. Development and validation of Risk Equations for Complications Of type 2 Diabetes (RECODe) using individual participant data from randomised trials. Lancet Diabetes Endocrinol 2017; 5: 788–98.
-2 Basu S, Sussman JB, Berkowitz SA, et al. Validation of Risk Equations for Complications of Type 2 Diabetes (RECODe) Using Individual Participant Data From Diverse Longitudinal Cohorts in the U.S. Diabetes Care 2018; 41: 586–95.
 
+1 Basu S, Sussman JB, Berkowitz SA, Hayward RA, Yudkin JS. Development and validation of Risk Equations for Complications Of type 2 Diabetes (RECODe) using individual participant data from randomised trials. Lancet Diabetes Endocrinol 2017; 5: 788–98.
+https://www.sciencedirect.com/science/article/pii/S2213858717302218
+
+2 Basu S, Sussman JB, Berkowitz SA, et al. Validation of Risk Equations for Complications of Type 2 Diabetes (RECODe) Using Individual Participant Data From Diverse Longitudinal Cohorts in the U.S. Diabetes Care 2018; 41: 586–95.
+http://care.diabetesjournals.org/content/41/3/586
 
 Sanjay Basu, M.D., Ph.D.1,2*, Rodney A. Hayward, M.D.3,4, Jeremy B. Sussman, M.D., M.S.3,4, Seth A. Berkowitz, M.D., M.P.H.5,6, John S. Yudkin, M.D.7
 
